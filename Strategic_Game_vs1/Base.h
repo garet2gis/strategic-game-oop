@@ -19,6 +19,7 @@ public:
 	//virtual void render(sf::RenderWindow& window) const;
 	void setMaxCreateUnits(int newMax);
 	int getConsoleFlag() const;
+	virtual std::string getName() = 0;
 	virtual std::string info() = 0;
 	virtual FieldObject* copy() = 0;
 	
@@ -30,7 +31,9 @@ class HumanBase : public Base
 public:
 	HumanBase();
 	std::string info();
+	std::string getName();
 	FieldObject* copy();
+
 	//void makeUnits(int numb, int kind);
 };
 
@@ -39,6 +42,7 @@ class AlienBase : public Base
 public:
 	AlienBase();
 	std::string info();
+	std::string getName();
 	FieldObject* copy();
 	//void makeUnits(int numb, int kind);
 };

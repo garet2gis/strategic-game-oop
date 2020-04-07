@@ -43,6 +43,17 @@ std::string AlienBase::info() {
 	std::string out = "Info: race: alien, class: Base, healpoints: " + std::to_string(healPoints) + "\n";
 	return out;
 }
+std::string HumanBase::getName() {
+	std::string out = "Info: race: human, class: Base \n";
+	return out;
+}
+
+
+std::string AlienBase::getName() {
+	std::string out = "Info: race: alien, class: Base \n";
+	return out;
+}
+
 
 FieldObject* AlienBase::copy() {
 	return new AlienBase(*this);
@@ -50,7 +61,7 @@ FieldObject* AlienBase::copy() {
 
 
 
-template <class T>
+/*template <class T>
 void Base::makeUnits(int numb, std::string kind) {
 	if (numb > maxCreateUnits) {
 		std::cout << "Impossible to make this numb of Units\n";
@@ -63,6 +74,6 @@ void Base::makeUnits(int numb, std::string kind) {
 
 
 }
-
+*/
 
 

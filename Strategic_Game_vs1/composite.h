@@ -17,7 +17,7 @@ public:
 
 class Composite :public Component {
 protected:
-	std::vector<Component*> children;
+	//std::vector<Component*> children;
 public:
 
 };
