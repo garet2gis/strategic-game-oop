@@ -1,6 +1,7 @@
 //#include <SFML/Graphics.hpp>
 #include "Field.h"
-#include "Base.h"
+#include "ArmyFactory.h"
+//#include "Base.h"
 
 void example1() {
 
@@ -8,9 +9,9 @@ void example1() {
 	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
 
 	ArmyFactory* humanFactory = new HumanArmyFactory();
-	Warrior* hw = humanFactory->createWarrior();
+	Warrior* hw = humanFactory->createWarriorTank();
 
-	Stormtrooper* hs = humanFactory->createStormtrooper();
+	Shooter* hs = humanFactory->createShooterSniper();
 	//Добавляем юнита в первую попавшуюся клетку
 	field1.addObject(hw);
 	//Добавляем юнита по координатам
@@ -40,110 +41,12 @@ void example1() {
 	std::cout << " END\n";
 }
 
-void example2() {
-	PlayingField field1(20, 20);
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-	//PlayingField field2 = field1;
-	ArmyFactory* humanFactory = new HumanArmyFactory();
-	Warrior* hw = humanFactory->createWarrior();
-	Stormtrooper* hs = humanFactory->createStormtrooper();
-	Medic* hm = humanFactory->createMedic();
-
-	ArmyFactory* alienFactory = new AlienArmyFactory();
-	Warrior* aw = alienFactory->createWarrior();
-	Stormtrooper* as = alienFactory->createStormtrooper();
-	Medic* am = alienFactory->createMedic();
-
-	for (int i = 0; i < 20; i++) {
-		field1.addObject(hs, i, 0);
-		field1.addObject(hm, i, 1);
-		field1.addObject(hw, i, 2);
-		field1.addObject(as, i, 19);
-		field1.addObject(am, i, 18);
-		field1.addObject(aw, i, 17);
-	}
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-	for (int i = 0; i < 20; i++) {
-		field1.moveObject(i, 0, i, 5);
-	}
-
-	PlayingField field2 = field1;
-
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-
-	std::cout << "Field 2:\n"; field2.showConsoleField();	std::cout << "\n";
-
-	
-	field2.deleteObject(0, 0);
-	field2.moveObject(5, 1, 7, 1);
-
-
-	field2.moveObject(5, 1, 10, 10);
-	field2.deleteObject(1, 1);
-	std::cout << "Field 2:\n"; field2.showConsoleField();	std::cout << "\n";
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-}
-
-
-void example3() {
-	
-	PlayingField field(5,5);
-	
-	HumanBase* humBase = new HumanBase();
-	field.addObject(humBase, 2, 2);
-	std::cout << "Field :\n"; field.showConsoleField();	std::cout << "\n";
-
-	/*
-	ArmyFactory* humanFactory = new HumanArmyFactory();
-	Warrior* hw = humanFactory->createWarrior();
-	Stormtrooper* hs = humanFactory->createStormtrooper();
-	Medic* hm = humanFactory->createMedic();
-
-	ArmyFactory* alienFactory = new AlienArmyFactory();
-	Warrior* aw = alienFactory->createWarrior();
-	Stormtrooper* as = alienFactory->createStormtrooper();
-	Medic* am = alienFactory->createMedic();
-
-	std::cout << "Field 1:\n";
-	field1.addObject(hw);
-	field1.addObject(aw);
-	std::cout << "Field 2:\n";
-	field2.addObject(hs);
-	field2.addObject(as);
-	std::cout << "Field 3:\n";
-	field3.addObject(hm);
-	field3.addObject(am);
-
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-	std::cout << "Field 2:\n"; field2.showConsoleField();	std::cout << "\n";
-	std::cout << "Field 3:\n"; field3.showConsoleField();	std::cout << "\n";
-
-
-	field1 = field2 = field3;
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-	std::cout << "Field 2:\n"; field2.showConsoleField();	std::cout << "\n";
-	std::cout << "Field 3:\n"; field3.showConsoleField();	std::cout << "\n";
-	
-	std::cout << "Field 3:\n";
-	field3.setMaxNumberOfElements(10);
-	for (int i = 0; i < 10; i++) {
-		field3.addObject(hw);
-	}
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-	std::cout << "Field 2:\n"; field2.showConsoleField();	std::cout << "\n";
-	std::cout << "Field 3:\n"; field3.showConsoleField();	std::cout << "\n";
-
-	field2.setMaxNumberOfElements(1);
-	field2 = PlayingField();
-	std::cout << " END\n";
-	*/
-}
 
 
 int main() {
-	//example1();
+	example1();
 	//example2();
-	example3();
+	//example3();
 	return 0;
 }
 
