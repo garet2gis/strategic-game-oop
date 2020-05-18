@@ -51,5 +51,4 @@ public:
 	void showConsoleField();
 	int getCurrentElements();
 	void setMaxNumberOfElements(int newValue);
-
 };

@@ -2,116 +2,248 @@
 
 Unit::Unit() {
 	name = "Abstract Unit";
+	shortName = "A_U";
 	healPoints = 0;
 	armorPoints = 0;
 	damage = 0;
 	alreadyMooved = 0;
-	flagForConsole = 0;
 }
 
-Unit::Unit(const Unit& copyUnit) {
-	name = copyUnit.name;
-	healPoints = copyUnit.healPoints;
-	damage = copyUnit.damage;
-	alreadyMooved = copyUnit.alreadyMooved;
-	flagForConsole = copyUnit.flagForConsole;
-}
-
-HumanWarrior::HumanWarrior() {
-	name = "Human Warrior";
-	healPoints = 200;
-	armorPoints = 60;
-	damage = 50;
-	alreadyMooved = false;
-	flagForConsole = 1;
-}
-
-HumanStormtrooper::HumanStormtrooper() {
-	name = "Human Stormtrooper";
-	healPoints = 150;
-	armorPoints = 70;
-	damage = 30;
-	alreadyMooved = false;
-	flagForConsole = 2;
-}
-
-HumanMedic::HumanMedic() {
-	name = "HumanMedic";
-	healPoints = 100;
-	armorPoints = 40;
-	damage = 15;
-	alreadyMooved = false;
-	flagForConsole = 3;
-}
-AlienWarrior::AlienWarrior() {
-	name = "Alien Warrior";
-	healPoints = 150;
+HumanWarriorTank::HumanWarriorTank() {
+	name = "Human Warrior Tank";
+	shortName = "H_W_t";
+	healPoints = 300;
 	armorPoints = 100;
-	damage = 45;
+	damage = 40;
 	alreadyMooved = false;
-	flagForConsole = -1;
+	range = 0;
 }
 
-AlienStormtrooper::AlienStormtrooper() {
-	name = "Alien Stormtrooper";
-	healPoints = 125;
-	armorPoints = 110;
-	damage = 25;
+HumanWarriorDamager::HumanWarriorDamager() {
+	name = "Human Warrior Damager";
+	shortName = "H_W_d";
+	healPoints = 220;
+	armorPoints = 70;
+	damage = 60;
 	alreadyMooved = false;
-	flagForConsole = -2;
-
+	range = 0;
 }
 
-AlienMedic::AlienMedic() {
-	name = "AlienMedic";
-	healPoints = 40;
-	armorPoints = 80;
-	damage = 20;
+HumanShooterStormtrooper::HumanShooterStormtrooper() {
+	name = "Human Shooter Stormtrooper";
+	shortName = "H_S_st";
+	healPoints = 175;
+	armorPoints = 60;
+	damage = 60;
 	alreadyMooved = false;
-	flagForConsole = -3;
+	range = 1;
+}
+
+HumanShooterSniper::HumanShooterSniper() {
+	name = "Human Shooter Sniper";
+	shortName = "H_S_sn";
+	healPoints = 150;
+	armorPoints = 50;
+	damage = 150;
+	alreadyMooved = false;
+	range = 3;
+}
+
+HumanMedicTank::HumanMedicTank() {
+	name = "Human Medic Tank";
+	shortName = "H_M_t";
+	healPoints = 250;
+	armorPoints = 60;
+	damage = 35;
+	healDmg = 40;
+	alreadyMooved = false;
+	range = 0;
 }
 
 
-std::string HumanWarrior::info() {
-	std::string out = "Info: race: Human, class: Warrior, healpoints: " + std::to_string(healPoints) + ", armorpoints: " + std::to_string(armorPoints) + ", damage:"+ std::to_string(damage) + "\n";
-	return out;
+HumanMedicRange::HumanMedicRange() {
+	name = "Human Medic Range";
+	shortName = "H_M_r";
+	healPoints = 150;
+	armorPoints = 50;
+	damage = 30;
+	healDmg = 50;
+	alreadyMooved = false;
+	range = 2;
 }
-std::string HumanStormtrooper::info() {
-	std::string out = "Info: race: Human, class: Stormtrooper, healpoints: " + std::to_string(healPoints) + ", armorpoints: " + std::to_string(armorPoints) + ", damage:" + std::to_string(damage) + "\n";
-	return out;
+
+AlienWarriorTank::AlienWarriorTank() {
+	name = "Alien Warrior Tank";
+	shortName = "A_W_t";
+	healPoints = 300;
+	armorPoints = 100;
+	damage = 40;
+	alreadyMooved = false;
+	range = 0;
 }
-std::string HumanMedic::info() {
-	std::string out = "Info: race: Human, class: Medic, healpoints: " + std::to_string(healPoints) + ", armorpoints: " + std::to_string(armorPoints) + ", damage:" + std::to_string(damage) + "\n";
-	return out;
+
+AlienWarriorDamager::AlienWarriorDamager() {
+	name = "Alien Warrior Damager";
+	shortName = "A_W_d";
+	healPoints = 220;
+	armorPoints = 70;
+	damage = 60;
+	alreadyMooved = false;
+	range = 0;
 }
-std::string AlienWarrior::info() {
-	std::string out = "Info: race: Alien, class: Warrior, healpoints: " + std::to_string(healPoints) + ", armorpoints: " + std::to_string(armorPoints) + ", damage:" + std::to_string(damage) + "\n";
-	return out;
+
+AlienShooterStormtrooper::AlienShooterStormtrooper() {
+	name = "Alien Shooter Stormtrooper";
+	shortName = "A_S_st";
+	healPoints = 175;
+	armorPoints = 60;
+	damage = 60;
+	alreadyMooved = false;
+	range = 1;
 }
-std::string AlienStormtrooper::info() {
-	std::string out = "Info: race: Alien, class: Stormtrooper, healpoints: " + std::to_string(healPoints) + ", armorpoints: " + std::to_string(armorPoints) + ", damage:" + std::to_string(damage) + "\n";
-	return out;
+
+AlienShooterSniper::AlienShooterSniper() {
+	name = "Alien Shooter Sniper";
+	shortName = "A_S_sn";
+	healPoints = 150;
+	armorPoints = 50;
+	damage = 150;
+	alreadyMooved = false;
+	range = 3;
 }
-std::string AlienMedic::info() {
-	std::string out = "Info: race: Alien, class: Medic, healpoints: " + std::to_string(healPoints) + ", armorpoints: " + std::to_string(armorPoints) + ", damage:" + std::to_string(damage) + "\n";
+
+AlienMedicTank::AlienMedicTank() {
+	name = "Alien Medic Tank";
+	shortName = "A_M_t";
+	healPoints = 250;
+	armorPoints = 60;
+	damage = 35;
+	healDmg = 40;
+	alreadyMooved = false;
+	range = 0;
+}
+
+
+AlienMedicRange::AlienMedicRange() {
+	name = "Alien Medic Range";
+	shortName = "A_M_r";
+	healPoints = 150;
+	armorPoints = 50;
+	damage = 30;
+	healDmg = 50;
+	alreadyMooved = false;
+	range = 2;
+}
+
+//Human
+std::string HumanWarriorTank::info() {
+	std::string out = "Info: race: Human, class: Warrior, specialization: Tank, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
 	return out;
 }
 
-std::string HumanWarrior::getName() {
+std::string HumanWarriorDamager::info() {
+	std::string out = "Info: race: Human, class: Warrior, specialization: Damager, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+
+std::string HumanShooterStormtrooper::info() {
+	std::string out = "Info: race: Human, class: Shooter, specialization: Stormtrooper, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+
+std::string HumanShooterSniper::info() {
+	std::string out = "Info: race: Human, class: Shooter, specialization: Sniper, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+
+std::string HumanMedicTank::info() {
+	std::string out = "Info: race: Human, class: Medic, specialization: Tank, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+std::string HumanMedicRange::info() {
+	std::string out = "Info: race: Human, class: Medic, specialization: Range, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+
+//Alien
+
+std::string AlienWarriorTank::info() {
+	std::string out = "Info: race: Alien, class: Warrior, specialization: Tank, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+
+std::string AlienWarriorDamager::info() {
+	std::string out = "Info: race: Alien, class: Warrior, specialization: Damager, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+
+std::string AlienShooterStormtrooper::info() {
+	std::string out = "Info: race: Alien, class: Shooter, specialization: Stormtrooper, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+
+std::string AlienShooterSniper::info() {
+	std::string out = "Info: race: Alien, class: Shooter, specialization: Sniper, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+
+std::string AlienMedicTank::info() {
+	std::string out = "Info: race: Alien, class: Medic, specialization: Tank, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+std::string AlienMedicRange::info() {
+	std::string out = "Info: race: Alien, class: Medic, specialization: Range, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	return out;
+}
+std::string Unit::getShortName() {
+	return shortName;
+}
+
+//getName
+//Human
+std::string HumanWarriorTank::getName() {
 	return name;
 }
-std::string HumanStormtrooper::getName() {
+
+std::string HumanWarriorDamager::getName() {
 	return name;
 }
-std::string HumanMedic::getName() {
+std::string HumanShooterStormtrooper::getName() {
 	return name;
 }
-std::string AlienWarrior::getName() {
+
+std::string HumanShooterSniper::getName() {
 	return name;
 }
-std::string AlienStormtrooper::getName() {
+
+std::string HumanMedicTank::getName() {
 	return name;
 }
-std::string AlienMedic::getName() {
+std::string HumanMedicRange::getName() {
+	return name;
+}
+
+//Alien
+
+std::string AlienWarriorTank::getName() {
+	return name;
+}
+
+std::string AlienWarriorDamager::getName() {
+	return name;
+}
+
+std::string AlienShooterStormtrooper::getName() {
+	return name;
+}
+
+std::string AlienShooterSniper::getName() {
+	return name;
+}
+
+std::string AlienMedicTank::getName() {
+	return name;
+}
+std::string AlienMedicRange::getName() {
 	return name;
 }

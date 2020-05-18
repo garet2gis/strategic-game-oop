@@ -10,28 +10,28 @@ protected:
 public:
 	virtual std::string getName() = 0;
 	virtual std::string info() = 0;
-	virtual int getConsoleFlag() const = 0;
 	virtual FieldObject* copy() = 0;
+	virtual std::string getShortName()=0;
 };
 
 class Unit : public FieldObject
 {
 protected:
 	std::string name;
+	std::string shortName;
 	int healPoints;
 	int armorPoints;
 	int damage;
 	bool alreadyMooved;
-	int flagForConsole;
+	//int flagForConsole;
+	int range;
 	//sf::Sprite sprite;
 public:
 	Unit();
-	Unit(const Unit& copyUnit);
 	virtual std::string info() = 0;
 	virtual std::string getName() = 0;
+	virtual std::string getShortName();
 	//virtual void render(sf::RenderWindow& window) const;
-
-	virtual int getConsoleFlag() const = 0;
 	virtual FieldObject* copy() = 0;
 };
 
@@ -40,7 +40,6 @@ class Structure : public Unit
 public:
 	virtual std::string info() = 0;
 	virtual std::string getName() = 0;
-	virtual int getConsoleFlag() const = 0;
 	virtual FieldObject* copy() = 0;
 };
 
@@ -49,24 +48,23 @@ class Warrior : public Unit
 public:
 	virtual std::string info() = 0;
 	virtual std::string getName() = 0;
-	virtual int getConsoleFlag() const = 0;
 	virtual FieldObject* copy() = 0;
 };
 
-class Stormtrooper : public Unit
+class Shooter : public Unit
 {
 public:
 	virtual std::string info() = 0;
 	virtual std::string getName() = 0;
-	virtual int getConsoleFlag() const = 0;
 	virtual FieldObject* copy() = 0;
 };
 class Medic : public Unit
 {
+protected:
+	int healDmg;
 public:
 	virtual std::string info() = 0;
 	virtual std::string getName() = 0;
-	virtual int getConsoleFlag() const = 0;
 	virtual FieldObject* copy() = 0;
 };
 
@@ -86,131 +84,219 @@ class AlienStructure : public Structure
 class HumanWarrior : public Warrior
 {
 public:
-	HumanWarrior();
-	FieldObject* copy()
-	{
-		return new HumanWarrior(*this);
-	}
-	std::string info();
-	std::string getName();
-	int getConsoleFlag() const 
-	{
-		return flagForConsole;
-	}
+	virtual std::string info() = 0;
+	virtual std::string getName() = 0;
+	virtual FieldObject* copy() = 0;
 };
 
-class HumanStormtrooper : public Stormtrooper
+
+class HumanWarriorTank : public HumanWarrior
 {
 public:
-	HumanStormtrooper();
-	FieldObject* copy() {
-		return new HumanStormtrooper(*this);
+	HumanWarriorTank();
+	FieldObject* copy()
+	{
+		return new HumanWarriorTank(*this);
 	}
 	std::string info();
 	std::string getName();
-	int getConsoleFlag() const
+};
+
+class HumanWarriorDamager : public HumanWarrior
+{
+public:
+	HumanWarriorDamager();
+	FieldObject* copy()
 	{
-		return flagForConsole;
+		return new HumanWarriorDamager(*this);
 	}
+	std::string info();
+	std::string getName();
+
+};
+
+
+
+class HumanShooter  : public Shooter
+{
+public:
+	virtual std::string info() = 0;
+	virtual std::string getName() = 0;
+	virtual FieldObject* copy() = 0;
+};
+
+
+class HumanShooterSniper : public HumanShooter
+{
+public:
+	HumanShooterSniper();
+	FieldObject* copy() {
+		return new HumanShooterSniper(*this);
+	}
+	std::string info();
+	std::string getName();
+
+};
+
+class HumanShooterStormtrooper : public HumanShooter
+{
+public:
+	HumanShooterStormtrooper();
+	FieldObject* copy() {
+		return new HumanShooterStormtrooper(*this);
+	}
+	std::string info();
+	std::string getName();
+
 };
 
 class HumanMedic : public Medic
 {
 public:
-	HumanMedic();
+	virtual std::string info() = 0;
+	virtual std::string getName() = 0;
+	virtual FieldObject* copy() = 0;
+};
+
+class HumanMedicTank : public HumanMedic
+{
+public:
+	HumanMedicTank();
 	FieldObject* copy() {
-		return new HumanMedic(*this);
+		return new HumanMedicTank(*this);
 	}
 	std::string info();
 	std::string getName();
-	int getConsoleFlag() const
-	{
-		return flagForConsole;
-	}
+
 };
+
+class HumanMedicRange : public HumanMedic
+{
+public:
+	HumanMedicRange();
+	FieldObject* copy() {
+		return new HumanMedicRange(*this);
+	}
+	std::string info();
+	std::string getName();
+
+};
+
+
+
+
+
+/*class HumanStructure : public Structure
+{
+
+};
+
+
+class AlienStructure : public Structure
+{
+
+};
+*/
 
 class AlienWarrior : public Warrior
 {
 public:
-	AlienWarrior();
-	FieldObject* copy() {
-		return new AlienWarrior(*this);
-	}
-	std::string info();
-	std::string getName();
-	int getConsoleFlag() const
-	{
-		return flagForConsole;
-	}
+	virtual std::string info() = 0;
+	virtual std::string getName() = 0;
+	virtual FieldObject* copy() = 0;
 };
 
-class AlienStormtrooper : public Stormtrooper
+
+class AlienWarriorTank : public AlienWarrior
 {
 public:
-	AlienStormtrooper();
-	std::string getName();
-	FieldObject* copy() {
-		return new AlienStormtrooper(*this);
+	AlienWarriorTank();
+	FieldObject* copy()
+	{
+		return new AlienWarriorTank(*this);
 	}
 	std::string info();
-	int getConsoleFlag() const
+	std::string getName();
+
+};
+
+class AlienWarriorDamager : public AlienWarrior
+{
+public:
+	AlienWarriorDamager();
+	FieldObject* copy()
 	{
-		return flagForConsole;
+		return new AlienWarriorDamager(*this);
 	}
+	std::string info();
+	std::string getName();
+
+};
+
+
+
+class AlienShooter : public Shooter
+{
+public:
+	virtual std::string info() = 0;
+	virtual std::string getName() = 0;
+	virtual FieldObject* copy() = 0;
+};
+
+
+class AlienShooterSniper : public AlienShooter
+{
+public:
+	AlienShooterSniper();
+	FieldObject* copy() {
+		return new AlienShooterSniper(*this);
+	}
+	std::string info();
+	std::string getName();
+
+};
+
+class AlienShooterStormtrooper : public AlienShooter
+{
+public:
+	AlienShooterStormtrooper();
+	FieldObject* copy() {
+		return new AlienShooterStormtrooper(*this);
+	}
+	std::string info();
+	std::string getName();
+
 };
 
 class AlienMedic : public Medic
 {
 public:
-	AlienMedic();
+	virtual std::string info() = 0;
+	virtual std::string getName() = 0;
+	virtual FieldObject* copy() = 0;
+};
+
+class AlienMedicTank : public AlienMedic
+{
+public:
+	AlienMedicTank();
 	FieldObject* copy() {
-		return new AlienMedic(*this);
+		return new AlienMedicTank(*this);
 	}
 	std::string info();
 	std::string getName();
-	int getConsoleFlag() const
-	{
-		return flagForConsole;
-	}
 
 };
 
-class ArmyFactory
+class AlienMedicRange : public AlienMedic
 {
 public:
-	virtual Warrior* createWarrior() = 0;
-	virtual Stormtrooper* createStormtrooper() = 0;
-	virtual Medic* createMedic() = 0;
-	virtual ~ArmyFactory() {}
+	AlienMedicRange();
+	FieldObject* copy() {
+		return new AlienMedicRange(*this);
+	}
+	std::string info();
+	std::string getName();
+
 };
-
-class HumanArmyFactory : public ArmyFactory
-{
-public:
-	Warrior* createWarrior(){
-		return new HumanWarrior();
-	}
-	Stormtrooper* createStormtrooper() {
-		return new HumanStormtrooper();
-	}
-	Medic* createMedic() {
-		return new HumanMedic();
-	}
-};
-
-class AlienArmyFactory : public ArmyFactory
-{
-public:
-	Warrior* createWarrior() {
-		return new AlienWarrior;
-	}
-	Stormtrooper* createStormtrooper() {
-		return new AlienStormtrooper;
-	}
-	Medic* createMedic() {
-		return new AlienMedic;
-	}
-};
-
-
 

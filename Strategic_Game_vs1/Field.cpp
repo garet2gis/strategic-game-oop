@@ -208,44 +208,19 @@ void PlayingField::addObject(FieldObject* newObject, int X , int Y ) {
 
 
 void PlayingField::showConsoleField() {
+	std::string name;
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < length; j++) {
-			if (field[i][j].getObjectPtr())
-				switch (field[i][j].getObjectPtr()->getConsoleFlag()) {
-				case 1:
-					std::cout << "hw ";
-					break;
-				case 2:
-					std::cout << "hs ";
-					break;
-				case 3:
-					std::cout << "hm ";
-					break;
-				case -1:
-					std::cout << "aw ";
-					break;
-				case -2:
-					std::cout << "as ";
-					break;
-				case -3:
-					std::cout << "am ";
-					break;
-				case 4:
-					std::cout << "hb ";
-					break;
-				case -4:
-					std::cout << "ab ";
-					break;
-				}
-			else 
-			{
-				std::cout << "-- ";
+			if (field[i][j].getObjectPtr()) {
+				name = field[i][j].getObjectPtr()->getShortName();
+				std::cout << name;
 			}
+			else
+				std::cout << "[____]";
 		}
 		std::cout << "\n";
 	}
 }
-
 bool PlayingField::checkCoordinate(int x, int y) const
 {
 	if (x >= length || x < 0 || y >= width || y < 0) {

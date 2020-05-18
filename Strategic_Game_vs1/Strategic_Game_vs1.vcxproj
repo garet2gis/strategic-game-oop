@@ -139,16 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArmyFactory.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="Composite.cpp" />
     <ClCompile Include="Field.cpp" />
+    <ClCompile Include="FieldIterator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArmyFactory.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Composite.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="FieldIterator.h" />
     <ClInclude Include="Unit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
