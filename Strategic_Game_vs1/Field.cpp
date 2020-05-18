@@ -216,7 +216,7 @@ void PlayingField::showConsoleField() {
 				std::cout << name;
 			}
 			else
-				std::cout << "[____]";
+				std::cout << "[___]";
 		}
 		std::cout << "\n";
 	}

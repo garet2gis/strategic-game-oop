@@ -144,8 +144,10 @@
     <ClCompile Include="Composite.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="FieldIterator.cpp" />
+    <ClCompile Include="Flyweight.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="UnitAttributes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArmyFactory.h" />
@@ -153,7 +155,9 @@
     <ClInclude Include="Composite.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="FieldIterator.h" />
+    <ClInclude Include="Flyweight.h" />
     <ClInclude Include="Unit.h" />
+    <ClInclude Include="UnitAttributes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

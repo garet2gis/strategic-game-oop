@@ -2,69 +2,70 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <unordered_map>
+#include <utility>
+#include "UnitAttributes.h"
 
 class FieldObject
 {
 protected:
 	std::string name;
+	std::string shortName;
+	bool canMove;
 public:
+	virtual bool isMovable() {
+		return canMove;
+	}
 	virtual std::string getName() = 0;
 	virtual std::string info() = 0;
 	virtual FieldObject* copy() = 0;
 	virtual std::string getShortName()=0;
 };
 
+
 class Unit : public FieldObject
 {
 protected:
-	std::string name;
-	std::string shortName;
-	int healPoints;
-	int armorPoints;
-	int damage;
-	bool alreadyMooved;
 	//int flagForConsole;
-	int range;
-	//sf::Sprite sprite;
+	UnitAttributes attributes;
+	int number;
+	static int count;
 public:
 	Unit();
 	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
+	virtual std::string getName();
 	virtual std::string getShortName();
 	//virtual void render(sf::RenderWindow& window) const;
 	virtual FieldObject* copy() = 0;
+	friend std::ostream& operator<<(std::ostream& os, const Unit& fu) {
+		return os << "Nuber: ["<< number<<"]";
+	}
 };
 
-class Structure : public Unit
+/*class Structure : public Unit
 {
 public:
 	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
 	virtual FieldObject* copy() = 0;
 };
-
+*/
 class Warrior : public Unit
 {
 public:
-	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
-	virtual FieldObject* copy() = 0;
+	virtual std::string info() =0;
+	virtual FieldObject* copy() =0;
 };
 
 class Shooter : public Unit
 {
 public:
 	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
 	virtual FieldObject* copy() = 0;
 };
-class Medic : public Unit
+class Buffer : public Unit
 {
-protected:
-	int healDmg;
 public:
 	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
 	virtual FieldObject* copy() = 0;
 };
 
@@ -81,222 +82,90 @@ class AlienStructure : public Structure
 };
 */
 
-class HumanWarrior : public Warrior
+class WarriorTank :public Warrior
 {
 public:
-	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
-	virtual FieldObject* copy() = 0;
-};
-
-
-class HumanWarriorTank : public HumanWarrior
-{
-public:
-	HumanWarriorTank();
+	WarriorTank();
 	FieldObject* copy()
 	{
-		return new HumanWarriorTank(*this);
+		return new WarriorTank(*this);
 	}
 	std::string info();
-	std::string getName();
+
 };
 
-class HumanWarriorDamager : public HumanWarrior
+
+class WarriorDamager : public Warrior
 {
 public:
-	HumanWarriorDamager();
+	WarriorDamager();
 	FieldObject* copy()
 	{
-		return new HumanWarriorDamager(*this);
+		return new WarriorDamager(*this);
 	}
 	std::string info();
-	std::string getName();
 
 };
 
 
-
-class HumanShooter  : public Shooter
+class ShooterTank :public Shooter
 {
 public:
-	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
-	virtual FieldObject* copy() = 0;
-};
-
-
-class HumanShooterSniper : public HumanShooter
-{
-public:
-	HumanShooterSniper();
-	FieldObject* copy() {
-		return new HumanShooterSniper(*this);
+	ShooterTank();
+	FieldObject* copy()
+	{
+		return new ShooterTank(*this);
 	}
 	std::string info();
-	std::string getName();
 
 };
 
-class HumanShooterStormtrooper : public HumanShooter
+
+
+
+class ShooterDamager :public Shooter
 {
 public:
-	HumanShooterStormtrooper();
-	FieldObject* copy() {
-		return new HumanShooterStormtrooper(*this);
+	ShooterDamager();
+	FieldObject* copy()
+	{
+		return new ShooterDamager(*this);
 	}
 	std::string info();
-	std::string getName();
 
 };
 
-class HumanMedic : public Medic
-{
-public:
-	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
-	virtual FieldObject* copy() = 0;
-};
 
-class HumanMedicTank : public HumanMedic
+
+class BufferTank :public Buffer
 {
 public:
-	HumanMedicTank();
-	FieldObject* copy() {
-		return new HumanMedicTank(*this);
+	BufferTank();
+	FieldObject* copy()
+	{
+		return new BufferTank(*this);
 	}
 	std::string info();
-	std::string getName();
 
 };
 
-class HumanMedicRange : public HumanMedic
+
+
+class BufferDamager :public Buffer
 {
 public:
-	HumanMedicRange();
-	FieldObject* copy() {
-		return new HumanMedicRange(*this);
+	BufferDamager();
+	FieldObject* copy()
+	{
+		return new BufferDamager(*this);
 	}
 	std::string info();
-	std::string getName();
 
 };
-
-
-
 
 
 /*class HumanStructure : public Structure
 {
 
 };
-
-
-class AlienStructure : public Structure
-{
-
-};
 */
-
-class AlienWarrior : public Warrior
-{
-public:
-	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
-	virtual FieldObject* copy() = 0;
-};
-
-
-class AlienWarriorTank : public AlienWarrior
-{
-public:
-	AlienWarriorTank();
-	FieldObject* copy()
-	{
-		return new AlienWarriorTank(*this);
-	}
-	std::string info();
-	std::string getName();
-
-};
-
-class AlienWarriorDamager : public AlienWarrior
-{
-public:
-	AlienWarriorDamager();
-	FieldObject* copy()
-	{
-		return new AlienWarriorDamager(*this);
-	}
-	std::string info();
-	std::string getName();
-
-};
-
-
-
-class AlienShooter : public Shooter
-{
-public:
-	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
-	virtual FieldObject* copy() = 0;
-};
-
-
-class AlienShooterSniper : public AlienShooter
-{
-public:
-	AlienShooterSniper();
-	FieldObject* copy() {
-		return new AlienShooterSniper(*this);
-	}
-	std::string info();
-	std::string getName();
-
-};
-
-class AlienShooterStormtrooper : public AlienShooter
-{
-public:
-	AlienShooterStormtrooper();
-	FieldObject* copy() {
-		return new AlienShooterStormtrooper(*this);
-	}
-	std::string info();
-	std::string getName();
-
-};
-
-class AlienMedic : public Medic
-{
-public:
-	virtual std::string info() = 0;
-	virtual std::string getName() = 0;
-	virtual FieldObject* copy() = 0;
-};
-
-class AlienMedicTank : public AlienMedic
-{
-public:
-	AlienMedicTank();
-	FieldObject* copy() {
-		return new AlienMedicTank(*this);
-	}
-	std::string info();
-	std::string getName();
-
-};
-
-class AlienMedicRange : public AlienMedic
-{
-public:
-	AlienMedicRange();
-	FieldObject* copy() {
-		return new AlienMedicRange(*this);
-	}
-	std::string info();
-	std::string getName();
-
-};
-

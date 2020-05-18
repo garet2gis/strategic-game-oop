@@ -8,17 +8,19 @@ void example1() {
 	PlayingField field1(3, 3);
 	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
 
-	ArmyFactory* humanFactory = new HumanArmyFactory();
-	Warrior* hw = humanFactory->createWarriorTank();
+	ArmyFactory* warriorFactory = new WarriorFactory();
+	Unit* wt = warriorFactory->createTank();
 
-	Shooter* hs = humanFactory->createShooterSniper();
+	ArmyFactory* shooterFactory = new ShooterFactory();
+
+	Unit* sd = shooterFactory->createDamager();
 	//Добавляем юнита в первую попавшуюся клетку
-	field1.addObject(hw);
+	field1.addObject(wt);
 	//Добавляем юнита по координатам
-	field1.addObject(hs, 2, 2);
+	field1.addObject(sd, 2, 2);
 	//Добавляем юнита в клетку, которая выходит за границы поля
-	field1.addObject(hw,4, 4);
-	field1.addObject(hw, -1, 0);
+	field1.addObject(wt,4, 4);
+	field1.addObject(wt, -1, 0);
 
 	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
 	//Перемещаем юнита из клетки 0.0 в клетку 1.0

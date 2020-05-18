@@ -3,56 +3,40 @@
 class ArmyFactory
 {
 public:
-	virtual Warrior* createWarriorTank() = 0;
-	virtual Warrior* createWarriorDamager() = 0;
-	virtual Shooter* createShooterSniper() = 0;
-	virtual Shooter* createShooterStormtrooper() = 0;
-	virtual Medic* createMedicTank() = 0;
-	virtual Medic* createMedicRange() = 0;
+	virtual Unit* createTank() = 0;
+	virtual Unit* createDamager() = 0;
 };
 
-class HumanArmyFactory : public ArmyFactory
+class WarriorFactory : public ArmyFactory
 {
 public:
-	Warrior* createWarriorTank() {
-		return new HumanWarriorTank;
+	Unit* createTank() {
+		return new WarriorTank;
 	}
-	Warrior* createWarriorDamager() {
-		return new HumanWarriorDamager;
-	}
-	Shooter* createShooterSniper() {
-		return new HumanShooterSniper;
-	}
-	Shooter* createShooterStormtrooper() {
-		return new HumanShooterStormtrooper;
-	}
-	Medic* createMedicTank() {
-		return new HumanMedicTank;
-	}
-	Medic* createMedicRange() {
-		return new HumanMedicRange;
+	Unit* createDamager() {
+		return new WarriorDamager;
 	}
 };
 
-class AlienArmyFactory : public ArmyFactory
+class ShooterFactory : public ArmyFactory
 {
 public:
-	Warrior* createWarriorTank() {
-		return new AlienWarriorTank;
+	Unit* createTank() {
+		return new ShooterTank;
 	}
-	Warrior* createWarriorDamager() {
-		return new AlienWarriorDamager;
-	}
-	Shooter* createShooterSniper() {
-		return new AlienShooterSniper;
-	}
-	Shooter* createShooterStormtrooper() {
-		return new AlienShooterStormtrooper;
-	}
-	Medic* createMedicTank() {
-		return new AlienMedicTank;
-	}
-	Medic* createMedicRange() {
-		return new AlienMedicRange;
+	Unit* createDamager() {
+		return new ShooterDamager;
 	}
 };
+
+class BufferFactory : public ArmyFactory
+{
+public:
+	Buffer* createTank() {
+		return new BufferTank;
+	}
+	Buffer* createDamager() {
+		return new BufferDamager;
+	}
+};
+

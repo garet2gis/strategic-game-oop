@@ -3,65 +3,69 @@
 Base::Base(int maxCreateUnits, PlayingField* field) {
 	this->maxCreateUnits = maxCreateUnits;
 	this->field = field;
-	this->flagForConsole = 666;
-	this->baseType = abstract;
-	this->healPoints = 0;
 
+	healPoints = 1000;
+	warriorFactory = new WarriorFactory();
+	shooterFactory = new ShooterFactory();
+	bufferFactory = new BufferFactory();
+
+	flyweightFactory = new FlyweightFactory({ {"green"},{"blue"},{"red"}});
+
+
+	name = "Base";
+	shortName = "_B_";
 
 }
-
-HumanBase::HumanBase() : Base() {
-	flagForConsole = 4;
-	healPoints = 500;
-	baseType = Human;
+std::string Base::getShortName() {
+	return shortName;
 }
-
-AlienBase::AlienBase() : Base() {
-	flagForConsole = -4;
-	healPoints = 400;
-	baseType = Alien;
+std::string Base::getName() {
+	return name;
+}
+std::string Base::info() {
+	std::string out = "Base , current healpoints: " + std::to_string(healPoints) +  "\n";
+	return out;
 }
 
 void Base::setMaxCreateUnits(int newMax) {
 	maxCreateUnits = newMax;
 }
 
-int Base::getConsoleFlag() const{
-	return flagForConsole;
+void Base::createUnit(std::string UnitType, unsigned row, unsigned column, std::string color)
+{
+	Unit* newUnit;
+	
+	Flyweight newFlyweight = flyweightFactory->GetFlyweight({ color });
+
+
+
+	if (UnitType == "W_t") {
+		newUnit = warriorFactory->createTank();
+	}
+	else if (UnitType == "W_d") {
+		newUnit = warriorFactory->createDamager();
+	}
+	else if (UnitType == "S_t") {
+		newUnit = shooterFactory->createTank();
+	}
+	else if (UnitType == "S_d") {
+		newUnit = shooterFactory->createDamager();
+	}
+	else if (UnitType == "B_t") {
+		newUnit = bufferFactory->createTank();
+	}
+	else if (UnitType == "B_d") {
+		newUnit = bufferFactory->createDamager();
+	}
+	else {
+		std::cout << "Wrong UnitType \n";
+		return;
+	}
+	units.push_back(new FullUnit(newUnit, &newFlyweight));
 }
 
-std::string HumanBase::info() {
-	std::string out = "Info: race: human, class: Base, healpoints: " + std::to_string(healPoints) + "\n";
-	return out;
-}
 
-FieldObject* HumanBase::copy() {
-	return new HumanBase(*this);
-}
-
-std::string AlienBase::info() {
-	std::string out = "Info: race: alien, class: Base, healpoints: " + std::to_string(healPoints) + "\n";
-	return out;
-}
-std::string HumanBase::getName() {
-	std::string out = "Info: race: human, class: Base \n";
-	return out;
-}
-
-
-std::string AlienBase::getName() {
-	std::string out = "Info: race: alien, class: Base \n";
-	return out;
-}
-
-
-FieldObject* AlienBase::copy() {
-	return new AlienBase(*this);
-}
-
-
-
-/*template <class T>
+template <class T>
 void Base::makeUnits(int numb, std::string kind) {
 	if (numb > maxCreateUnits) {
 		std::cout << "Impossible to make this numb of Units\n";
@@ -74,6 +78,6 @@ void Base::makeUnits(int numb, std::string kind) {
 
 
 }
-*/
+
 
 
