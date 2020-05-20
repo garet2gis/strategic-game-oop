@@ -1,45 +1,19 @@
 //#include <SFML/Graphics.hpp>
-#include "Field.h"
+#include "Base.h"
 #include "ArmyFactory.h"
 //#include "Base.h"
 
 void example1() {
 
 	PlayingField field1(3, 3);
+	Base* base = new Base(10, &field1, 1,2);
 	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
+	std::cout << "Landscape 1:\n"; field1.showConsoleLandscape();	std::cout << "\n";
 
-	ArmyFactory* warriorFactory = new WarriorFactory();
-	Unit* wt = warriorFactory->createTank();
-
-	ArmyFactory* shooterFactory = new ShooterFactory();
-
-	Unit* sd = shooterFactory->createDamager();
-	//Добавляем юнита в первую попавшуюся клетку
-	field1.addObject(wt);
-	//Добавляем юнита по координатам
-	field1.addObject(sd, 2, 2);
-	//Добавляем юнита в клетку, которая выходит за границы поля
-	field1.addObject(wt,4, 4);
-	field1.addObject(wt, -1, 0);
-
+	base->createUnit("W_t", "red", 1, 1);
 	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-	//Перемещаем юнита из клетки 0.0 в клетку 1.0
-	field1.moveObject(0, 0, 1, 0);
+	base->createUnit("B_d", "pink", 2, 2);
 	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-
-	//Создаем новое поле
-	PlayingField field2(9, 9);
-
-	std::cout << "Field 2:\n"; field2.showConsoleField(); std::cout << "\n";
-	//Присваиваем новому полю старое
-	field2 = field1;
-
-	std::cout << "Field 2:\n"; field2.showConsoleField(); std::cout << "\n";
-	//Удаляем из предыдущего поля юнита
-	field1.deleteObject(2,2);
-	std::cout << "Field 1:\n"; field1.showConsoleField(); std::cout << "\n";
-	std::cout << "Field 2:\n"; field2.showConsoleField(); std::cout << "\n";
-	std::cout << "Field 2:\n"; field2.showConsoleField(); std::cout << "\n";
 	std::cout << " END\n";
 }
 

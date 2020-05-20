@@ -3,17 +3,22 @@
 PlayingField::Cell::Cell()
 {
 	fieldObject_ = nullptr;
-
+	landscape = nullptr;
 }
 
 PlayingField::Cell::Cell(const Cell& copyCell) {
 	FieldObject* newObject = (copyCell.fieldObject_)->copy();
 	fieldObject_ = newObject;
+
+	FieldObject* copyLand = (copyCell.landscape)->copy();
+	landscape = copyLand;
 }
 
 PlayingField::Cell::Cell(Cell&& copyCell){
 	fieldObject_ = copyCell.fieldObject_;
+	landscape = copyCell.landscape;
 	copyCell.fieldObject_ = nullptr;
+	copyCell.landscape = nullptr;
 }
 
 PlayingField::Cell& PlayingField::Cell::operator=(Cell&& copyCell)
@@ -21,7 +26,9 @@ PlayingField::Cell& PlayingField::Cell::operator=(Cell&& copyCell)
 	if (&copyCell == this)
 		return *this;
 	fieldObject_ = copyCell.fieldObject_;
+	landscape = copyCell.landscape;
 	copyCell.fieldObject_ = nullptr;
+	copyCell.landscape = nullptr;
 	return *this;
 }
 
@@ -34,10 +41,15 @@ PlayingField::Cell& PlayingField::Cell::operator=(const Cell& copyCell)
 		FieldObject* newObject = (copyCell.fieldObject_)->copy();
 		fieldObject_ = newObject;
 	}
-	else 
+	else fieldObject_ = nullptr;
+	
+	if (copyCell.landscape)
 	{
-		fieldObject_ = nullptr;
+		FieldObject* copyLand = (copyCell.landscape)->copy();
+		landscape = copyLand;
 	}
+	else landscape = nullptr;
+
 	return *this;
 }
 
@@ -87,6 +99,9 @@ PlayingField::PlayingField(int width_, int length_) : width(width_), length(leng
 	{
 		field[i] = new Cell[length];
 	}
+
+	setRandomLandscape();
+
 	std::cout << "[field]Constructor\n";
 }
 
@@ -125,10 +140,10 @@ PlayingField& PlayingField::operator=(const PlayingField& playingField)
 		length = playingField.length;
 		currentNumberOfElements = playingField.currentNumberOfElements;
 		maxNumberOfElements = playingField.maxNumberOfElements;
-		field = new Cell * [width];
+		field = new Cell* [width];
 		for (int i = 0; i < width; i++)
 		{
-			field[i] = new Cell[length];
+			field[i] = new Cell [length];
 			for (int j = 0; j < length; j++)
 				field[i][j] = playingField.field[i][j];
 		}
@@ -164,14 +179,12 @@ PlayingField::~PlayingField() {
 int PlayingField::getCurrentElements() {
 	return currentNumberOfElements;
 }
-//template <typename T>
 
-
-void PlayingField::addObject(FieldObject* newObject, int X , int Y ) {
+bool PlayingField::addObject(FieldObject* newObject, int X , int Y ) {
 	if (maxNumberOfElements == currentNumberOfElements)
 	{
 		std::cout << "Can't add more Elements \n";
-		return;
+		return false;
 	}
 	int i = 0, j = 0;
 
@@ -190,19 +203,19 @@ void PlayingField::addObject(FieldObject* newObject, int X , int Y ) {
 					break;
 				}
 			}
-			if (flag) return;
+			if (flag) return false;
 		}
 	}
 	else {
 		if (!checkCoordinate(X, Y)) {
-			return;
+			return false;
 		}
 		if (field[Y][X].isOccupied()) {
-			return;
+			return false;
 		}
 		field[Y][X].setObjectPtr(newObject);
 		std::cout << "Object added X:" << X << " Y:" << Y << "\n";
-		return;
+		return true;
 	}
 }
 
@@ -217,6 +230,16 @@ void PlayingField::showConsoleField() {
 			}
 			else
 				std::cout << "[___]";
+		}
+		std::cout << "\n";
+	}
+}
+void PlayingField::showConsoleLandscape() {
+	std::string name;
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < length; j++) {
+			name = field[i][j].getLandscapePtr()->getShortName();
+			std::cout << name;
 		}
 		std::cout << "\n";
 	}
@@ -268,3 +291,25 @@ void PlayingField::deleteObject(int X, int Y) {
 
 
 
+void PlayingField::setRandomLandscape() {
+	srand(time(0));
+	for (unsigned int i = 0; i < width; i++) {
+		for (unsigned int j = 0; j < length; j++) {
+			int random_land = rand() % 3+0;
+			switch (random_land) {
+			case(ground): {
+				field[i][j].setLandscapePtr(new LandscapeProxy(new Ground));
+				break;
+			}
+			case(water): {
+				field[i][j].setLandscapePtr(new LandscapeProxy(new Water));
+				break;
+			}
+			case(mountain): {
+				field[i][j].setLandscapePtr(new LandscapeProxy(new Mountains));
+				break;
+			}
+			}
+		}
+	}
+}

@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 class UnitAttributes
 {
 private:
@@ -17,4 +18,8 @@ public:
 	void setArmorPoints(int ap);
 	void setDamage(int dmg);
 	void setRange(int r);
+
+	friend std::ostream& operator<<(std::ostream& os, const UnitAttributes& ua) {
+		return os << "[" << ua.healPoints << "]";
+	}
 };

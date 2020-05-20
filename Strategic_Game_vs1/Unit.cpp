@@ -11,9 +11,6 @@ Unit::Unit() {
 	count++;
 }
 
-
-
-
 WarriorTank::WarriorTank() {
 	name = "Warrior Tank";
 	shortName = "W_t";
@@ -65,6 +62,7 @@ std::string Unit::getShortName() {
 std::string Unit::getName() {
 	return name;
 }
+/*
 std::string WarriorTank::info() {
 	std::string out = "Info class: Warrior, specialization: Tank, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
 	return out;
@@ -94,3 +92,4 @@ std::string BufferDamager::info() {
 	return out;
 }
 
+*/

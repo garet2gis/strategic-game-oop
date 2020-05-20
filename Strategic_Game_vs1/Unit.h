@@ -1,86 +1,69 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <string>
 #include <unordered_map>
 #include <utility>
 #include "UnitAttributes.h"
+#include "observer_interfaces.h"
+#include "FieldObject.h"
+#include "Flyweight.h"
 
-class FieldObject
+class Unit : public FieldObject, IUnit
 {
 protected:
-	std::string name;
-	std::string shortName;
-	bool canMove;
-public:
-	virtual bool isMovable() {
-		return canMove;
-	}
-	virtual std::string getName() = 0;
-	virtual std::string info() = 0;
-	virtual FieldObject* copy() = 0;
-	virtual std::string getShortName()=0;
-};
-
-
-class Unit : public FieldObject
-{
-protected:
-	//int flagForConsole;
+	Flyweight* fly;
 	UnitAttributes attributes;
 	int number;
 	static int count;
 public:
 	Unit();
-	virtual std::string info() = 0;
+	std::string info() {
+		std::cout << attributes;
+		return "error69";
+	}
 	virtual std::string getName();
 	virtual std::string getShortName();
+
 	//virtual void render(sf::RenderWindow& window) const;
 	virtual FieldObject* copy() = 0;
-	friend std::ostream& operator<<(std::ostream& os, const Unit& fu) {
-		return os << "Nuber: ["<< number<<"]";
+	/*friend std::ostream& operator<<(std::ostream& os, const Unit& fu) {
+		return os << "Number: [" << number << "]";
+	}*/
+
+	void attachBase(IBase* base) { this->base = base; }
+	bool isMovable() {
+		return canMove;
+	}
+	void iAmDead() {
+		if (base) {
+			base->onUnitDestroyed(this);
+		}
+	}
+	void setFlyweight(Flyweight* flyweight_) {
+		this->fly = flyweight_;
 	}
 };
 
-/*class Structure : public Unit
-{
-public:
-	virtual std::string info() = 0;
-	virtual FieldObject* copy() = 0;
-};
-*/
 class Warrior : public Unit
 {
 public:
-	virtual std::string info() =0;
+
 	virtual FieldObject* copy() =0;
 };
 
 class Shooter : public Unit
 {
 public:
-	virtual std::string info() = 0;
+
 	virtual FieldObject* copy() = 0;
 };
 class Buffer : public Unit
 {
 public:
-	virtual std::string info() = 0;
+
 	virtual FieldObject* copy() = 0;
 };
 
-
-/*class HumanStructure : public Structure
-{
-
-};
-
-
-class AlienStructure : public Structure
-{
-
-};
-*/
 
 class WarriorTank :public Warrior
 {
@@ -90,7 +73,7 @@ public:
 	{
 		return new WarriorTank(*this);
 	}
-	std::string info();
+	
 
 };
 
@@ -103,7 +86,7 @@ public:
 	{
 		return new WarriorDamager(*this);
 	}
-	std::string info();
+
 
 };
 
@@ -116,11 +99,9 @@ public:
 	{
 		return new ShooterTank(*this);
 	}
-	std::string info();
+
 
 };
-
-
 
 
 class ShooterDamager :public Shooter
@@ -131,10 +112,7 @@ public:
 	{
 		return new ShooterDamager(*this);
 	}
-	std::string info();
-
 };
-
 
 
 class BufferTank :public Buffer
@@ -145,11 +123,7 @@ public:
 	{
 		return new BufferTank(*this);
 	}
-	std::string info();
-
 };
-
-
 
 class BufferDamager :public Buffer
 {
@@ -159,13 +133,5 @@ public:
 	{
 		return new BufferDamager(*this);
 	}
-	std::string info();
-
 };
 
-
-/*class HumanStructure : public Structure
-{
-
-};
-*/
