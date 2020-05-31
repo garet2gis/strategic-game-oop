@@ -1,12 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <unordered_map>
-#include <utility>
 #include "UnitAttributes.h"
 #include "observer_interfaces.h"
 #include "FieldObject.h"
 #include "Flyweight.h"
+
 
 class Unit : public FieldObject, IUnit
 {
@@ -15,52 +14,65 @@ protected:
 	UnitAttributes attributes;
 	int number;
 	static int count;
+	bool curPlayer; //1 player - true, 2 player - false
+
 public:
 	Unit();
-	std::string info() {
-		std::cout << attributes;
-		return "error69";
-	}
+	virtual std::string info() = 0;
 	virtual std::string getName();
 	virtual std::string getShortName();
-
-	//virtual void render(sf::RenderWindow& window) const;
+	virtual void unitInfluence(Unit* unit) {}
 	virtual FieldObject* copy() = 0;
-	/*friend std::ostream& operator<<(std::ostream& os, const Unit& fu) {
-		return os << "Number: [" << number << "]";
-	}*/
 
 	void attachBase(IBase* base) { this->base = base; }
+	virtual std::string getAbstractClass() {
+		return "Unit";
+	}
+
 	bool isMovable() {
 		return canMove;
 	}
-	void iAmDead() {
-		if (base) {
+	bool isAlive() {
+		if (!alive) {
+			base->onUnitDestroyed(this);
+		}
+		return alive;
+	}
+	void setAlive(bool flag) {
+		alive = flag;
+		if (!alive) {
 			base->onUnitDestroyed(this);
 		}
 	}
 	void setFlyweight(Flyweight* flyweight_) {
 		this->fly = flyweight_;
 	}
+	UnitAttributes* getAttributes() {
+		return &attributes;
+	}
+	Unit& operator+=(FieldObject* object) {
+		object->unitInfluence(this);
+		return *this;
+	}
 };
 
 class Warrior : public Unit
 {
 public:
-
+	virtual std::string info() = 0;
 	virtual FieldObject* copy() =0;
 };
 
 class Shooter : public Unit
 {
 public:
-
+	virtual std::string info() = 0;
 	virtual FieldObject* copy() = 0;
 };
 class Buffer : public Unit
 {
 public:
-
+	virtual std::string info() = 0;
 	virtual FieldObject* copy() = 0;
 };
 
@@ -73,7 +85,7 @@ public:
 	{
 		return new WarriorTank(*this);
 	}
-	
+	std::string info();
 
 };
 
@@ -86,7 +98,7 @@ public:
 	{
 		return new WarriorDamager(*this);
 	}
-
+	std::string info();
 
 };
 
@@ -99,7 +111,7 @@ public:
 	{
 		return new ShooterTank(*this);
 	}
-
+	std::string info();
 
 };
 
@@ -112,6 +124,7 @@ public:
 	{
 		return new ShooterDamager(*this);
 	}
+	std::string info();
 };
 
 
@@ -123,6 +136,7 @@ public:
 	{
 		return new BufferTank(*this);
 	}
+	std::string info();
 };
 
 class BufferDamager :public Buffer
@@ -133,5 +147,6 @@ public:
 	{
 		return new BufferDamager(*this);
 	}
+	std::string info();
 };
 

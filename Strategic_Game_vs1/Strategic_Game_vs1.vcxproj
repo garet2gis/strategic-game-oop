@@ -139,26 +139,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ArmyFactory.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="ClientInput.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Field.cpp" />
-    <ClCompile Include="FieldIterator.cpp" />
     <ClCompile Include="Flyweight.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Landscape.cpp" />
-    <ClCompile Include="LandscapeMap.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectStrategy.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitAttributes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArmyFactory.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="ClientInput.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="Field.h" />
-    <ClInclude Include="FieldIterator.h" />
     <ClInclude Include="Flyweight.h" />
     <ClInclude Include="FieldObject.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameFacade.h" />
+    <ClInclude Include="Handler.h" />
+    <ClInclude Include="observerField_andItems.h" />
+    <ClInclude Include="landscapeMapExample.h" />
     <ClInclude Include="Landscape.h" />
-    <ClInclude Include="LandscapeMap.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectStrategy.h" />
     <ClInclude Include="observer_interfaces.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitAttributes.h" />

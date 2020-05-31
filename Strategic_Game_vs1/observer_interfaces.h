@@ -14,5 +14,4 @@ protected:
 public:
 	virtual ~IUnit() = default;
 	virtual void  attachBase(IBase* base) = 0;
-	virtual void iAmDead() = 0;
 };

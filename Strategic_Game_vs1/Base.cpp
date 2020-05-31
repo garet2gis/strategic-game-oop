@@ -4,16 +4,24 @@ Base::Base(int maxCreateUnits, PlayingField* field, int X, int Y) {
 	this->maxCreateUnits = maxCreateUnits;
 	this->field = field;
 	healPoints = 1000;
+
 	warriorFactory = new WarriorFactory();
 	shooterFactory = new ShooterFactory();
 	bufferFactory = new BufferFactory();
-	flyweightFactory = new FlyweightFactory({{"green"},{"blue"},{"red"}});
+	flyweightFactory = new FlyweightFactory({{"green"},{"blue"},{"red"}});  //заранее инициализируем некоторые цвета
+
 	name = "Base";
 	shortName = "_B_";
 	canMove = false;
+	alive = true;
 
-	field->addObject(this, X, Y);
+	if (!field->addObject(this, X, Y)) {
+		std::cout << "Base: Base don't added to the field\n";
+		alive = false;
+		return;
+	}
 
+	std::cout << "Base: Base added to the field\n";
 }
 
 std::string Base::getShortName() {
@@ -33,12 +41,17 @@ void Base::setMaxCreateUnits(int newMax) {
 	maxCreateUnits = newMax;
 }
 
-void Base::createUnit(std::string UnitType, std::string color,unsigned row, unsigned column)
+Unit* Base::createUnit(std::string UnitType, std::string color,unsigned row, unsigned column)
 {
-	if (maxCreateUnits == units.size()) {
-		std::cout << "Base can't create more units\n";
-		return;
+	if (!field->checkCoordinate(row,column)) {
+		return nullptr;
 	}
+
+	if (maxCreateUnits == units.size()) {
+		std::cout << "Base: Base can't create more units\n";
+		return nullptr;
+	}
+
 	Unit* newUnit;
 	Flyweight newFlyweight = flyweightFactory->GetFlyweight({ color }); //если легковес с таким цветом существует возвращает его, иначе возвращает новый легковес
 	if (UnitType == "W_t") {
@@ -60,21 +73,26 @@ void Base::createUnit(std::string UnitType, std::string color,unsigned row, unsi
 		newUnit = bufferFactory->createDamager();
 	}
 	else {
-		std::cout << "Wrong UnitType \n";
-		return;
+		std::cout << "Base: Wrong UnitType \n";
+		return nullptr;
 	}
+
 	newUnit->setFlyweight(&newFlyweight);
+	newUnit->attachBase(this);
 	units.push_back(newUnit);
-	if (field->addObject(newUnit, row, column)) {
-		std::cout << "Unit added correctly\n";
+
+	if (field->addUnit(newUnit, row, column)) {
+		std::cout << "Base: Unit added correctly\n";
 	}
+	else {
+		std::cout << "Base: Unit was not added to the field\n";
+		delete newUnit;
+		return nullptr;
+	}
+
+	return newUnit;
 }
 
 
-void Base::sendUnitToField(FieldObject* unit, unsigned row, unsigned column) {
-	if (field->addObject(unit, row, column)) {
-		std::cout << "Unit added correctly\n";
-	}
-}
 
 

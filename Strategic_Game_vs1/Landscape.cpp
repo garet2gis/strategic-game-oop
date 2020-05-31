@@ -7,9 +7,9 @@ Mountains::Mountains() {
 	canMove = false;
 }
 
-bool Mountains::canHoldCreature() const { return true; }
+bool Mountains::canHoldFieldObject(FieldObject* unit) const { return true; }
 
-FieldObject* Mountains::copy() {
+Landscape* Mountains::copy() {
 	return new Mountains(*this);
 }
 
@@ -18,16 +18,14 @@ std::string Mountains::info() {
 	return out;
 }
 
-
-
 Ground::Ground() {
 	name = "Ground";
 	shortName = "G";
 	canMove = false;
 }
-bool Ground::canHoldCreature() const{ return true; }
+bool Ground::canHoldFieldObject(FieldObject* unit) const{ return true; }
 
-FieldObject* Ground::copy() {
+Landscape* Ground::copy() {
 	return new Ground(*this);
 }
 
@@ -43,9 +41,15 @@ Water::Water() {
 	canMove = false;
 }
 
-bool Water::canHoldCreature() const{ return false; }
+bool Water::canHoldFieldObject(FieldObject* object) const{
+	if (object->getAbstractClass() == "Unit") {
+		std::cout << "Unit can't swim\n";
+		object->setAlive(false);
+	}
+	return false; 
+}
 
-FieldObject* Water::copy(){
+Landscape* Water::copy(){
 	return new Water(*this);
 }
 std::string Water::info() {

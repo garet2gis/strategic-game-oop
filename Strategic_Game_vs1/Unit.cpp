@@ -7,8 +7,10 @@ Unit::Unit() {
 	name = "Abstract Unit";
 	shortName = "A_u";
 	canMove = true;
+	alive = true;
 	number = count;
 	count++;
+
 }
 
 WarriorTank::WarriorTank() {
@@ -62,34 +64,33 @@ std::string Unit::getShortName() {
 std::string Unit::getName() {
 	return name;
 }
-/*
+
 std::string WarriorTank::info() {
-	std::string out = "Info class: Warrior, specialization: Tank, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	std::string out = "Info class: Warrior, specialization: Tank, " + attributes.getInfoAttributes();
 	return out;
 }
 
 std::string WarriorDamager::info() {
-	std::string out = "Info class: Warrior, specialization: Damager, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	std::string out = "Info class: Warrior, specialization: Damager, "  + attributes.getInfoAttributes();
 	return out;
 }
 
 std::string ShooterTank::info() {
-	std::string out = "Info class: Shooter, specialization: Tank, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	std::string out = "Info class: Shooter, specialization: Tank, "+attributes.getInfoAttributes();
 	return out;
 }
 
 std::string ShooterDamager::info() {
-	std::string out = "Info class: Shooter, specialization: Damager, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	std::string out = "Info class: Shooter, specialization: Damager, "+attributes.getInfoAttributes();
 	return out;
 }
 
 std::string BufferTank::info() {
-	std::string out = "Info class: Buffer, specialization: Tank, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	std::string out = "Info class: Buffer, specialization: Tank, " + attributes.getInfoAttributes();
 	return out;
 }
 std::string BufferDamager::info() {
-	std::string out = "Info class: Buffer, specialization: Damager, current healpoints: " + std::to_string(healPoints) + ", current armorpoints: " + std::to_string(armorPoints) + ", current damage: " + std::to_string(damage) + ", current range: " + std::to_string(range) + "\n";
+	std::string out = "Info class: Buffer, specialization: Damager, " + attributes.getInfoAttributes();
 	return out;
 }
 
-*/

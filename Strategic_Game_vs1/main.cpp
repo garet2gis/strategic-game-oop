@@ -1,100 +1,141 @@
 //#include <SFML/Graphics.hpp>
+
+/* for second
+
 #include "Base.h"
 #include "ArmyFactory.h"
-//#include "Base.h"
+#include "Object.h"
+#include "landscapeMapExample.h"
+*/
+/*
 
+//показывает работу легковеса
 void example1() {
 
-	PlayingField field1(3, 3);
-	Base* base = new Base(10, &field1, 1,2);
+	PlayingField field1(10, 10); //по умолчанию ландшафт рандомный
+	field1.setLandscape(mapExample_10x10); // заготовочный ладшафт
+
+	Base* base = new Base(10, &field1, 1,2); // добавляем базу которая может породить максимально 10 юнитов
+	if (!base->isAlive()) {
+		delete base;
+		return;
+	}
+
 	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
 	std::cout << "Landscape 1:\n"; field1.showConsoleLandscape();	std::cout << "\n";
+	
+	//создаем юнита красного цвета
+	std::cout << "Create unit with existing flyweight\n";
+	base->createUnit("W_t", "red", 1, 1); //тк в конструкторе базы уже был создан легковес с параметром красного цвета, то он не создается повторно
+	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
+	std::cout << "Create unit with new flyweight\n";
+	base->createUnit("B_d", "pink", 2, 2);//в данном случае создается новый легковес
+	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
+	std::cout << "Create unit with previous flyweight\n";
+	base->createUnit("S_d", "pink", 2, 5);//в данном случае будет использован предыдущий легковес
+	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
 
-	base->createUnit("W_t", "red", 1, 1);
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
-	base->createUnit("B_d", "pink", 2, 2);
-	std::cout << "Field 1:\n"; field1.showConsoleField();	std::cout << "\n";
 	std::cout << " END\n";
 }
 
 
+//данный пример показывает работу паттерна стратегия и что база контролирует количество юнитов
+void example2() {
+	PlayingField field(10, 10); //по умолчанию ландшафт рандомный
+	field.setLandscape(mapExample_10x10); // заготовочный ладшафт
+
+	Base* base = new Base(3, &field, 1, 2); // добавляем базу которая может создать максимум 3 юнита
+	if (!base->isAlive()) {
+		delete base;
+		return;
+	}
+	std::cout << "Creating 4 unit, but base has a limit of 4\n";
+	Unit* wt0 = base->createUnit("W_t", "red", 1, 1);
+	Unit* wt1 = base->createUnit("W_t", "red", 1, 2);
+	Unit* wd0 = base->createUnit("W_d", "red", 1, 3);
+	std::cout << "Cant create last unit\n";
+	Unit* wd1 = base->createUnit("W_d", "yellow", 1, 4); //4 юнита база создать не может
+
+	HealBooster* hb = new HealBooster(); //создаем аптечку и помещаем на поле
+
+	field.addObject(hb, 3, 3);
+
+	std::cout << "Field 1:\n"; field.showConsoleField();	std::cout << "\n";
+
+
+	//Демонстрация работы паттерна стратегия
+
+	std::cout << "Use heal boost on tank\n";
+	*wt0 += hb; //юнитам подкласса танк аптечка прибавляет 50 хп 
+	//std::cout << "Field 1:\n"; field.showConsoleField();	std::cout << "\n";
+	std::cout << "\n";
+	std::cout << "Use heal boost on damager\n";
+	*wd0 += hb;//юнитам подкласса урон аптечка прибавляет 30 хп 
+}
+
+//данный пример показывает работу паттерна прокси и что база реагирует на смерть юнита
+void example3() {
+	PlayingField field(10, 10); //по умолчанию ландшафт рандомный
+	field.setLandscape(mapExample_10x10); // заготовочный ладшафт
+	//PlayingField field1(10, 12);
+	//field = field1;
+	Base* base1 = new Base(3, &field, 1, 100); // добавляем базу по неправильным координатам
+	if (!base1->isAlive()) {
+		delete base1;
+	}
+
+	Base* base = new Base(3, &field, 0, 5);
+	if (!base->isAlive()) {
+		delete base;
+		return;
+	}
+	Unit* wt = base->createUnit("W_t", "red", 3, 6);
+
+	std::cout << "Field 1:\n"; field.showConsoleField();	std::cout << "\n";
+
+	std::cout << "Landscape 1:\n"; field.showConsoleLandscape();	std::cout << "\n";
+	
+
+	std::cout << "Interaction of the unit with the landscape\n";
+	field.checkUnitAndLandscape(wt);
+
+	std::cout << "Field 1:\n"; field.showConsoleField();	std::cout << "\n";
+	std::cout << "Landscape 1:\n"; field.showConsoleLandscape();	std::cout << "\n";
+
+}
+*/
+#include "Handler.h"
 
 int main() {
-	example1();
+
+	//example1();
 	//example2();
 	//example3();
+
+	GameFacade* facade = new GameFacade();
+
+	StartGame* chain = new StartGame(facade);
+	chain->setNext(new AddUnit(facade))->setNext(new MoveUnit(facade))->
+		setNext(new Attack(facade))->setNext(new GetInfo(facade));
+
+	ClientInput* input = new ClientInput();
+	input->setStart(10,10,20);
+	chain->handle(input);
+
+	input->setAddUnit(1, 1, "W_t", "white");
+	chain->handle(input);
+
+
+	input->setAddUnit(7, 7, "W_t", "red");
+	chain->handle(input);
+
+
+	input->setMove(1, 1, 4, 4);
+	chain->handle(input);
+
+	input->setGetInfo(4, 4);
+	chain->handle(input);
+
 	return 0;
 }
 
-
-
-/*using namespace sf;//включаем пространство имен sf, чтобы постоянно не писать sf::
-int main()
-{
-	RenderWindow window(sf::VideoMode(640, 480), "window"); //увеличили для удобства размер окна
-
-	Image heroimage; //создаем объект Image (изображение)
-	heroimage.loadFromFile("images/hero.png");//загружаем в него файл
-
-	Texture herotexture;//создаем объект Texture (текстура)
-	herotexture.loadFromImage(heroimage);//передаем в него объект Image (изображения)
-
-	Sprite herosprite;//создаем объект Sprite(спрайт)
-	herosprite.setTexture(herotexture);//передаём в него объект Texture (текстуры)
-	herosprite.setPosition(0, 0);//задаем начальные координаты появления спрайта
-	herosprite.setTextureRect(IntRect(0, 192, 96, 96));//получили нужный нам прямоугольник с котом
-
-	float CurrentFrame = 0;//хранит текущий кадр
-	Clock clock; //создаем переменную времени, т.о. привязка ко времени(а не мощности/загруженности процессора). 
-
-	while (window.isOpen())
-	{
-
-		float time = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
-		clock.restart(); //перезагружает время
-		time = time / 800; //скорость игры
-
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-		///////////////////////////////////////////Управление персонажем с анимацией////////////////////////////////////////////////////////////////////////
-		if ((Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed(Keyboard::A)))) { //если нажата клавиша стрелка влево или англ буква А
-			CurrentFrame += 0.005 * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
-			if (CurrentFrame > 3) CurrentFrame -= 3; //проходимся по кадрам с первого по третий включительно. если пришли к третьему кадру - откидываемся назад.
-			herosprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96, 96, 96)); //проходимся по координатам Х. получается 96,96*2,96*3 и опять 96
-			herosprite.move(-0.1 * time, 0);//происходит само движение персонажа влево
-		}
-
-		if ((Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed(Keyboard::D)))) {
-			CurrentFrame += 0.005 * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
-			if (CurrentFrame > 3) CurrentFrame -= 3; //проходимся по кадрам с первого по третий включительно. если пришли к третьему кадру - откидываемся назад.
-			herosprite.setTextureRect(IntRect(96 * int(CurrentFrame), 192, 96, 96)); //проходимся по координатам Х. получается 96,96*2,96*3 и опять 96
-
-			herosprite.move(0.1 * time, 0);//происходит само движение персонажа вправо
-
-		}
-
-
-		if ((Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed(Keyboard::W)))) {
-			CurrentFrame += 0.005 * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
-			if (CurrentFrame > 3) CurrentFrame -= 3; //проходимся по кадрам с первого по третий включительно. если пришли к третьему кадру - откидываемся назад.
-			herosprite.setTextureRect(IntRect(96 * int(CurrentFrame), 288, 96, 96)); //проходимся по координатам Х. получается 96,96*2,96*3 и опять 96
-			herosprite.move(0, -0.1 * time);//происходит само движение персонажа вверх
-		}
-
-		if ((Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed(Keyboard::S)))) {
-			CurrentFrame += 0.005 * time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
-			if (CurrentFrame > 3) CurrentFrame -= 3; //проходимся по кадрам с первого по третий включительно. если пришли к третьему кадру - откидываемся назад.
-			herosprite.setTextureRect(IntRect(96 * int(CurrentFrame), 0, 96, 96)); //проходимся по координатам Х. получается 96,96*2,96*3 и опять 96
-			herosprite.move(0, 0.1 * time);//происходит само движение персонажа вниз
-		}
-		window.clear();
-		window.draw(herosprite);//выводим спрайт на экран
-		window.display();
-	}
-
-	return 0;
-}*/

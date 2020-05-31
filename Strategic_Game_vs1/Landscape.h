@@ -1,14 +1,19 @@
 #pragma once
-#include "FieldObject.h"
+#include "Unit.h"
 
 class Landscape : public FieldObject
 {
-
 public:
 	virtual ~Landscape() = default;
-	virtual bool canHoldCreature() const = 0;
-	virtual FieldObject* copy() = 0;
+	virtual bool canHoldFieldObject(FieldObject* object) const = 0;
+	//virtual FieldObject* copy() = 0;
+
+
+	virtual Landscape* copy() = 0;
 	virtual std::string info() = 0;
+	bool isAlive() {
+		return false;
+	}
 	bool isMovable() {
 		return canMove;
 	}
@@ -18,6 +23,13 @@ public:
 	virtual std::string getShortName() {
 		return shortName;
 	}
+	virtual void unitInfluence(Unit* unit) {}
+
+	virtual std::string getAbstractClass() {
+		return "Landscape";
+	}
+	void setAlive(bool flag) {};
+	//virtual void setAlive(bool flag) {}
 };
 
 
@@ -40,11 +52,11 @@ public:
 	virtual std::string info() {
 		return landscape->info();
 	}
-	bool canHoldCreature() const override
+	bool canHoldFieldObject(FieldObject* unit) const
 	{
-		return landscape->canHoldCreature();
+		return landscape->canHoldFieldObject(unit);
 	}
-	FieldObject* copy()
+	Landscape* copy()
 	{
 		return new LandscapeProxy(landscape);
 	}
@@ -54,8 +66,8 @@ class Mountains : public Landscape
 {
 public:
 	Mountains();
-	bool canHoldCreature() const;
-	FieldObject* copy();
+	bool canHoldFieldObject(FieldObject* unit) const;
+	Landscape* copy();
 	virtual std::string info();
 };
 
@@ -64,8 +76,8 @@ class Ground : public Landscape
 {
 public:
 	Ground();
-	bool canHoldCreature() const;
-	FieldObject* copy();
+	bool canHoldFieldObject(FieldObject* unit) const;
+	Landscape* copy();
 	virtual std::string info();
 };
 
@@ -74,8 +86,8 @@ class Water : public Landscape
 {
 public:
 	Water();
-	bool canHoldCreature() const;
-	FieldObject* copy();
+	bool canHoldFieldObject(FieldObject* unit) const;
+	Landscape* copy();
 	virtual std::string info();
 };
 

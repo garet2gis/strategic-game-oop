@@ -10,18 +10,20 @@ PlayingField::Cell::Cell(const Cell& copyCell) {
 	FieldObject* newObject = (copyCell.fieldObject_)->copy();
 	fieldObject_ = newObject;
 
-	FieldObject* copyLand = (copyCell.landscape)->copy();
+	Landscape* copyLand = (copyCell.landscape)->copy();
 	landscape = copyLand;
+
 }
 
-PlayingField::Cell::Cell(Cell&& copyCell){
+PlayingField::Cell::Cell(Cell&& copyCell)noexcept {
 	fieldObject_ = copyCell.fieldObject_;
 	landscape = copyCell.landscape;
+	
 	copyCell.fieldObject_ = nullptr;
 	copyCell.landscape = nullptr;
 }
 
-PlayingField::Cell& PlayingField::Cell::operator=(Cell&& copyCell)
+PlayingField::Cell& PlayingField::Cell::operator=(Cell&& copyCell) noexcept
 {
 	if (&copyCell == this)
 		return *this;
@@ -45,7 +47,7 @@ PlayingField::Cell& PlayingField::Cell::operator=(const Cell& copyCell)
 	
 	if (copyCell.landscape)
 	{
-		FieldObject* copyLand = (copyCell.landscape)->copy();
+		Landscape* copyLand = (copyCell.landscape)->copy();
 		landscape = copyLand;
 	}
 	else landscape = nullptr;
@@ -71,27 +73,27 @@ void PlayingField::Cell::setObjectPtr(FieldObject* newObjectPtr)
 	fieldObject_ = newObjectPtr;
 }
 
-void PlayingField::setMaxNumberOfElements(int newValue)
+void PlayingField::setMaxNumberOfElements(unsigned newValue)
 {
 	if (newValue < currentNumberOfElements){
-		std::cout << "You cannot set this value for maximum field elements: there are already more units on the field\n";
+		std::cout << "Field:You cannot set this value for maximum field elements: there are already more units on the field\n";
 		return;
 	}
 	if (width * length >= newValue)
 		maxNumberOfElements = newValue;
 	else 
-		std::cout << "You cannot set this value for maximum field elements: the field size is less than the number of units\n";
+		std::cout << "Field:You cannot set this value for maximum field elements: the field size is less than the number of units\n";
 }
 
 
-PlayingField::PlayingField(int width_, int length_) : width(width_), length(length_)
+PlayingField::PlayingField(unsigned width_, unsigned length_) : width(width_), length(length_)
 {
 	maxNumberOfElements = width*length;
 	currentNumberOfElements = 0;
 	field = nullptr;
 	if (width < 1 || length < 1)
 	{
-		std::cout << "Incorrect field size!\n";
+		std::cout << "Field:Incorrect field size!\n";
 		return;
 	}
 	field = new Cell * [width];
@@ -120,7 +122,7 @@ PlayingField::PlayingField(const PlayingField& copyField) : width(copyField.widt
 	std::cout << "[field]Copy constructor is called\n";
 }
 
-PlayingField::PlayingField(PlayingField&& copyField) : width(copyField.width), length(copyField.length), currentNumberOfElements(copyField.currentNumberOfElements), maxNumberOfElements(copyField.maxNumberOfElements)
+PlayingField::PlayingField(PlayingField&& copyField)noexcept : width(copyField.width), length(copyField.length), currentNumberOfElements(copyField.currentNumberOfElements), maxNumberOfElements(copyField.maxNumberOfElements)
 {
 	field = copyField.field;
 	copyField.field = nullptr;
@@ -151,7 +153,7 @@ PlayingField& PlayingField::operator=(const PlayingField& playingField)
 	return *this;
 }
 
-PlayingField& PlayingField::operator=(PlayingField&& playingField)
+PlayingField& PlayingField::operator=(PlayingField&& playingField) noexcept
 {
 	std::cout << "[field]Assignment(move) operator is called\n";
 	if (this != &playingField)
@@ -180,43 +182,56 @@ int PlayingField::getCurrentElements() {
 	return currentNumberOfElements;
 }
 
-bool PlayingField::addObject(FieldObject* newObject, int X , int Y ) {
+bool PlayingField::addObject(FieldObject* newObject, unsigned X , unsigned Y ) {
 	if (maxNumberOfElements == currentNumberOfElements)
 	{
-		std::cout << "Can't add more Elements \n";
+		std::cout << "Field:Can't add more Objects \n";
 		return false;
 	}
+
 	int i = 0, j = 0;
 
-	if (X == -1 && Y == -1) {
-		int flag = false;
-		for (i = 0; i < width; i++)
-		{
-			for (j = 0; j < length; j++)
-			{
-				if (!field[i][j].isOccupied())
-				{
-					std::cout << "Object added X:"<<j<<" Y:"<<i<<"\n";
-					field[i][j].setObjectPtr(newObject);   
-					currentNumberOfElements++;
-					flag = true;
-					break;
-				}
-			}
-			if (flag) return false;
-		}
+	
+	if (!checkCoordinate(X, Y)) {
+			return false;
 	}
-	else {
-		if (!checkCoordinate(X, Y)) {
-			return false;
-		}
-		if (field[Y][X].isOccupied()) {
-			return false;
-		}
-		field[Y][X].setObjectPtr(newObject);
-		std::cout << "Object added X:" << X << " Y:" << Y << "\n";
+	if (field[Y][X].isOccupied()) {
+		std::cout << "Field: Cell with coordinates X:" << X << " Y:" << Y << " is occupied, can't add object\n";
+		return false;
+	}
+	field[Y][X].setObjectPtr(newObject);
+	std::cout << "Field:Object added X:" << X << " Y:" << Y << "\n";
+	return true;
+}
+
+bool PlayingField::addUnit(FieldObject* newObject, unsigned X, unsigned Y) {
+	if (maxNumberOfElements == currentNumberOfElements)
+	{
+		std::cout << "Field:Can't add more Objects \n";
+		return false;
+	}
+
+	int i = 0, j = 0;
+
+
+	if (!checkCoordinate(X, Y)) {
+		return false;
+	}
+	if (field[Y][X].isOccupied()) {
+		std::cout << "Field: Cell with coordinates X:" << X << " Y:" << Y << " is occupied, can't add object\n";
+		return false;
+	}
+
+	field[Y][X].setObjectPtr(newObject);
+	std::cout << "Field:Object added X:" << X << " Y:" << Y << "\n";
+
+	Unit* unit = dynamic_cast<Unit*>(newObject);
+	if (!unit) return false;
+
+	if (field[Y][X].getLandscapePtr()->canHoldFieldObject(unit)) {
 		return true;
 	}
+	return false;
 }
 
 
@@ -226,7 +241,7 @@ void PlayingField::showConsoleField() {
 		for (int j = 0; j < length; j++) {
 			if (field[i][j].getObjectPtr()) {
 				name = field[i][j].getObjectPtr()->getShortName();
-				std::cout << name;
+				std::cout <<"["<< name<<"]";
 			}
 			else
 				std::cout << "[___]";
@@ -239,15 +254,15 @@ void PlayingField::showConsoleLandscape() {
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < length; j++) {
 			name = field[i][j].getLandscapePtr()->getShortName();
-			std::cout << name;
+			std::cout << "[_"<<name<<"_]";
 		}
 		std::cout << "\n";
 	}
 }
-bool PlayingField::checkCoordinate(int x, int y) const
+bool PlayingField::checkCoordinate(unsigned x, unsigned y) const
 {
 	if (x >= length || x < 0 || y >= width || y < 0) {
-		std::cout << "Point goes beyond the field boundaries\n";
+		std::cout << "Field:Point goes beyond the field boundaries\n";
 		return false;
 	}
 	return true;
@@ -255,14 +270,14 @@ bool PlayingField::checkCoordinate(int x, int y) const
 
 
 
-void PlayingField::moveObject(int X_old, int Y_old, int X_new, int Y_new) {
+void PlayingField::moveObject(unsigned X_old, unsigned Y_old, unsigned X_new, unsigned Y_new) {
 	if (checkCoordinate(X_old,Y_old)&&checkCoordinate(X_new,Y_new))
 
 		if (!field[Y_new][X_new].getObjectPtr()) {
 			if (field[Y_old][X_old].getObjectPtr()) {
 				field[Y_new][X_new].setObjectPtr(field[Y_old][X_old].getObjectPtr());
 				field[Y_old][X_old].setObjectPtr(nullptr);
-				std::cout << "Unit mooved from X:"<<X_old<<" Y:"<<Y_old<<"  to X:"<<X_new<<" Y:"<<Y_new<<"\n";
+				std::cout << "Field:Unit mooved from X:"<<X_old<<" Y:"<<Y_old<<"  to X:"<<X_new<<" Y:"<<Y_new<<"\n";
 			}
 			else {
 				std::cout << "[moveUnit]No unit, X:" << X_old << " Y:" << Y_old << "\n";
@@ -273,23 +288,47 @@ void PlayingField::moveObject(int X_old, int Y_old, int X_new, int Y_new) {
 			std::cout << "[moveUnit]cell is occupied, X:" << X_new << " Y:" << Y_new << "\n";
 	
 }
+void PlayingField::moveUnit(unsigned X_old, unsigned Y_old, unsigned X_new, unsigned Y_new) {
+	if (checkCoordinate(X_old, Y_old) && checkCoordinate(X_new, Y_new))
+		if (!field[Y_new][X_new].getObjectPtr()) {
+			if (field[Y_old][X_old].getObjectPtr()->getAbstractClass()=="Unit") {
+				field[Y_new][X_new].setObjectPtr(field[Y_old][X_old].getObjectPtr());
+				field[Y_old][X_old].setObjectPtr(nullptr);
+				checkUnitAndLandscape(field[Y_old][X_old].getObjectPtr());
+				std::cout << "Field:Unit mooved from X:" << X_old << " Y:" << Y_old << "  to X:" << X_new << " Y:" << Y_new << "\n";
+			}
+			else {
+				std::cout << "[moveUnit]No unit, X:" << X_old << " Y:" << Y_old << "\n";
+				return;
+			}
+		}
+		else
+			std::cout << "[moveUnit]cell is occupied, X:" << X_new << " Y:" << Y_new << "\n";
+
+}
 
 
 
-void PlayingField::deleteObject(int X, int Y) {
+void PlayingField::deleteObject(unsigned X, unsigned Y) {
 	if (checkCoordinate(X,Y))
 		if (field[Y][X].getObjectPtr()) {
 			delete field[X][Y].getObjectPtr();
 			field[Y][X].setObjectPtr(nullptr);
 			currentNumberOfElements--;
-			std::cout << "Unit deleted X:" << X << " Y:" << Y << "\n";
+			std::cout << "Field:Unit deleted X:" << X << " Y:" << Y << "\n";
 		}
 		else 
 			std::cout << "[deleteUnit]No unit, X:" << X << " Y:" << Y << "\n";
 }
 
 
-
+void PlayingField::deleteObject(FieldObject* obj) {
+	if (!obj) {
+		return;
+	}
+	Coord c = findObjectCoordinates(obj);
+	deleteObject(c.x,c.y);
+}
 
 void PlayingField::setRandomLandscape() {
 	srand(time(0));
@@ -310,6 +349,34 @@ void PlayingField::setRandomLandscape() {
 				break;
 			}
 			}
+		}
+	}
+}
+
+
+void PlayingField::setLandscape(std::vector<char> map) {
+	if (map.size() < width * length) {
+		std::cout << "Field:Can't set new landscape, new map is smaller than field size\n";
+		return;
+	}
+	int c = 0;
+	for (unsigned int i = 0; i < width; i++) {
+		for (unsigned int j = 0; j < length; j++) {
+			switch (map[c]) {
+			case('G'): {
+				field[i][j].setLandscapePtr(new LandscapeProxy(new Ground));
+				break;
+			}
+			case('W'): {
+				field[i][j].setLandscapePtr(new LandscapeProxy(new Water));
+				break;
+			}
+			case('M'): {
+				field[i][j].setLandscapePtr(new LandscapeProxy(new Mountains));
+				break;
+			}
+			}
+			c++;
 		}
 	}
 }
